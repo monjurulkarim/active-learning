@@ -45,7 +45,7 @@ from mrcnn import model as modellib, utils
 
 # Path to trained weights file
 COCO_WEIGHTS_PATH = os.path.join(ROOT_DIR, "mask_rcnn_coco.h5")
-custom_weights_path = 'C:/Users/mk5n2/logs/roi20181114T2134-resnet50/mask_rcnn_roi_0040.h5'
+custom_weights_path = 'C:/Users/mk5n2/logs/roi20181114T2134-resnet50/mask_rcnn_roi_0040.h5'  #Change to your directory
 
 # Directory to save logs and model checkpoints, if not provided
 # through the command line argument --logs
@@ -89,27 +89,17 @@ class CustomDataset(utils.Dataset):
         subset: Subset to load: train or val
         """
         # Add classes. We have only one class to add.
-        # self.add_class("roi", 1, "barrier")
-        # self.add_class("roi", 2, "Bearing") #raju:
-        # self.add_class("roi", 3, "bracket")
-        # self.add_class("roi", 4, "joint")
-        # self.add_class("roi", 5, "pier cap")
-        # self.add_class("roi", 6, "pier wall")
-        # self.add_class("roi", 7, "pier")
-        # self.add_class("roi", 8, "Rivet")
-        # self.add_class("roi", 9, "slab")
-        # self.add_class("roi", 10, "truss")
-        self.add_class("roi", 1, "pedestrian")
-        self.add_class("roi", 2, "car") #raju:
-        self.add_class("roi", 3, "truck")
-        self.add_class("roi", 4, "direct lane")
-        self.add_class("roi", 5, "alternative lane")
-        self.add_class("roi", 6, "traffic sign")
-        self.add_class("roi", 7, "bus")
-        self.add_class("roi", 8, "walkway")
-        self.add_class("roi", 9, "T-intersection")
-        self.add_class("roi", 10, "driveway access")
-        self.add_class("roi", 11, "median")
+        self.add_class("roi", 1, "barrier")
+        self.add_class("roi", 2, "Bearing") #raju:
+        self.add_class("roi", 3, "bracket")
+        self.add_class("roi", 4, "joint")
+        self.add_class("roi", 5, "pier cap")
+        self.add_class("roi", 6, "pier wall")
+        self.add_class("roi", 7, "pier")
+        self.add_class("roi", 8, "Rivet")
+        self.add_class("roi", 9, "slab")
+        self.add_class("roi", 10, "truss")
+
 
 
         # Train or validation dataset?
@@ -195,49 +185,26 @@ class CustomDataset(utils.Dataset):
         # In the dataset, pictures are labeled with name 'Girder', etc.
         for i, p in enumerate(class_names):
         #"name" is the attributes name decided when labeling, etc. 'region_attributes': {name:'a'}#
-            if p['class'] == 'pedestrian':
+            if p['Name'] == 'barrier':
                 class_ids[i] = 1
-            elif p['class'] == 'car':
+            elif p['Name'] == 'Bearing':
                 class_ids[i] = 2
-            elif p['class'] == 'truck':
+            elif p['Name'] == 'bracket':
                 class_ids[i] = 3
-            elif p['class'] == 'direct lane':
+            elif p['Name'] == 'joint':
                 class_ids[i] = 4
-            elif p['class'] == 'alternative lane':
+            elif p['Name'] == 'pier cap':
                 class_ids[i] = 5
-            elif p['class'] == 'traffic sign':
+            elif p['Name'] == 'pier wall':
                 class_ids[i] = 6
-            elif p['class'] == 'bus':
+            elif p['Name'] == 'pier':
                 class_ids[i] = 7
-            elif p['class'] == 'walkway':
+            elif p['Name'] == 'Rivet':
                 class_ids[i] = 8
-            elif p['class'] == 'T-intersection':
+            elif p['Name'] == 'slab':
                 class_ids[i] = 9
-            elif p['class'] == 'driveway access':
+            elif p['Name'] == 'truss':
                 class_ids[i] = 10
-            elif p['class'] == 'median':
-                class_ids[i] = 11
-
-            # if p['Name'] == 'barrier':
-            #     class_ids[i] = 1
-            # elif p['Name'] == 'Bearing':
-            #     class_ids[i] = 2
-            # elif p['Name'] == 'bracket':
-            #     class_ids[i] = 3
-            # elif p['Name'] == 'joint':
-            #     class_ids[i] = 4
-            # elif p['Name'] == 'pier cap':
-            #     class_ids[i] = 5
-            # elif p['Name'] == 'pier wall':
-            #     class_ids[i] = 6
-            # elif p['Name'] == 'pier':
-            #     class_ids[i] = 7
-            # elif p['Name'] == 'Rivet':
-            #     class_ids[i] = 8
-            # elif p['Name'] == 'slab':
-            #     class_ids[i] = 9
-            # elif p['Name'] == 'truss':
-            #     class_ids[i] = 10
             #assert code here to extend to other labels
         class_ids = class_ids.astype(int)
         #Return mask, and array of class IDs of each instance. Since we have
@@ -268,7 +235,7 @@ def train(model):
 
     # Training dataset.
     dataset_train = CustomDataset()
-    dataset_folder = 'C:/Users/mk5n2/Mask/Inspire/CustomImages/'
+    dataset_folder = 'C:/Users/mk5n2/Mask/Inspire/CustomImages/' # change to your directory
     dataset_train.load_custom(dataset_folder, "train")
     dataset_train.prepare()
 
