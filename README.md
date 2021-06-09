@@ -23,7 +23,7 @@ This is the implementation code for the paper,<a href="https://journals.sagepub.
 *  [custom.py](https://github.com/monjurulkarim/active_learning/blob/main/custom.py) : this code is used for loading data and training the model
 *  [Training.ipynb](https://github.com/monjurulkarim/active_learning/blob/main/Training.ipynb): loading the weight and calling the training function
 *  [result_calculation.ipynb](https://github.com/monjurulkarim/active_learning/blob/main/result_calculation.ipynb): this code is used for detecting and segmenting bridge elements. This also calculates precision, recall and f1-score of the model. Please follow the notebook for iterative training.
-*  [mrcnn/visualize_frame_relation_4f.py](https://github.com/monjurulkarim/active_learning/blob/main/mrcnn/visualize_frame_relation_4f.py) : this code is used for visualizing the detected bridge elements with mask. This also saves the coordinates of the predicted masks to re-train the network with the predicted masks for future iteration.
+*  [mrcnn/visualize_frame_relation_4f.py](https://github.com/monjurulkarim/active_learning/blob/main/mrcnn/visualize_frame_relation_4f.py) : this code is used for visualizing the segmented bridge elements with mask. This also saves the coordinates of the predicted masks to re-train the network with the predicted masks for future iterations.
 
 ## Citation
 If you use this repository, please cite the following paper:
