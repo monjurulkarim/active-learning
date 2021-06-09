@@ -39,4 +39,4 @@ If you use this repository, please cite the following paper:
 }
 ~~~~
 
-Note that part of codes are referred from <a href="https://github.com/matterport/Mask_RCNN"> "Mask RCNN"</a> project.
+Note that part of codes are referred from <a href="https://github.com/matterport/Mask_RCNN">Mask RCNN</a> project.
