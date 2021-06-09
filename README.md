@@ -20,3 +20,17 @@ This is the implementation code for the paper,<a href="https://journals.sagepub.
 *  [result_calculation.ipynb](https://github.com/monjurulkarim/active_learning/blob/main/result_calculation.ipynb): this code is used for detecting objects with or without temporal coherence. This also calculates precision, recall and f1-score of the model.
 *  [mrcnn/visualize_frame_relation_4f.py](https://github.com/monjurulkarim/active_learning/blob/main/mrcnn/visualize_frame_relation_4f.py) : this code is used for visualizing the detected bridge elements with mask.
 
+## Citation
+If you use this repository, please cite the following paper:
+
+~~~~
+@article{karim2021semi,
+  title={A semi-supervised self-training method to develop assistive intelligence for segmenting multiclass bridge elements from inspection videos},
+  author={Karim, Muhammad Monjurul and Qin, Ruwen and Chen, Genda and Yin, Zhaozheng},
+  journal={Structural Health Monitoring},
+  pages={14759217211010422},
+  year={2021},
+  publisher={SAGE Publications Sage UK: London, England}
+}
+~~~~
+
