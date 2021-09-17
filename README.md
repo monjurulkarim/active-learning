@@ -16,7 +16,7 @@ This is the implementation code for the paper,<a href="https://github.com/monjur
 * Dataset Preparation
 * Pre-trained models
 * Training and Testing
-* Citation -->
+* Citation --->
 
 ## Getting Started
 * Install the required dependencies: (for reference see [how_to_install.pdf](https://github.com/monjurulkarim/Tracking_manufacturing/blob/master/how_to_install.pdf) )
