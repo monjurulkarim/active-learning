@@ -88,7 +88,7 @@ class CustomDataset(utils.Dataset):
         dataset_dir: Root directory of the dataset.
         subset: Subset to load: train or val
         """
-        # Add classes. We have only one class to add.
+        # Add classes. We have only ten classes to add.
         self.add_class("roi", 1, "barrier")
         self.add_class("roi", 2, "Bearing") #raju:
         self.add_class("roi", 3, "bracket")
