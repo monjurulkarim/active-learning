@@ -22,8 +22,8 @@ This is the implementation code for the paper,<a href="https://arxiv.org/pdf/210
 * Install the required dependencies: (for reference see [how_to_install.pdf](https://github.com/monjurulkarim/Tracking_manufacturing/blob/master/how_to_install.pdf) )
 *  [custom.py](https://github.com/monjurulkarim/active_learning/blob/main/custom.py) : this code is used for loading data and training the model
 *  [Training.ipynb](https://github.com/monjurulkarim/active_learning/blob/main/Training.ipynb): loading the weight and calling the training function
-*  [result_calculation.ipynb](https://github.com/monjurulkarim/active_learning/blob/main/result_calculation.ipynb): this code is used for detecting and segmenting bridge elements. This also calculates precision, recall and f1-score of the model. Please follow the notebook for iterative training.
-*  [mrcnn/visualize_frame_relation_4f.py](https://github.com/monjurulkarim/active_learning/blob/main/mrcnn/visualize_frame_relation_4f.py) : this code is used for visualizing the segmented bridge elements with mask. This also saves the coordinates of the predicted masks to re-train the network with the predicted masks for future iterations.
+*  [inference.ipynb](https://github.com/monjurulkarim/active_learning/blob/main/inference.ipynb): this code is used for inferencing. 
+*  [mrcnn/visualize.py](https://github.com/monjurulkarim/active_learning/blob/main/mrcnn/visualize.py) : this code is used for visualizing the segmented bridge elements with mask.
 
 ## Citation
 If you use this repository, please cite the following paper:
