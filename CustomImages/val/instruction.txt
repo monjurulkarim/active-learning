@@ -2,3 +2,6 @@ Put the following file in here:
 
 1) validation images
 2) annotation file (format: json)
+
+To annotate and create json file use this link:
+http://www.robots.ox.ac.uk/~vgg/software/via/via-1.0.6.html
