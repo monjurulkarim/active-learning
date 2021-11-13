@@ -153,7 +153,7 @@ def display_instances(f_ref,image,file,filename,filesize,json1, boxes, masks, cl
     ax.set_title(title)
 
     masked_image = image.astype(np.uint32).copy()
-    safety_pxl = 500
+    safety_pxl = 40
     # data_list = list()
     # data = dict()
     areas = [] # store the areas of every object
@@ -206,11 +206,11 @@ def display_instances(f_ref,image,file,filename,filesize,json1, boxes, masks, cl
             distance ='m'
         elif class_ids[i] == 7 and area > pier_3:
             distance = 'c'
-        elif class_ids[i] == 7 and area > 10 and area < pier_cap_2:
+        elif class_ids[i] == 5 and area > 10 and area < pier_cap_2:
             distance = 'f'
-        elif class_ids[i] == 7 and area > pier_cap_2 and area < pier_cap_3:
+        elif class_ids[i] == 5 and area > pier_cap_2 and area < pier_cap_3:
             distance ='m'
-        elif class_ids[i] == 7 and area > pier_cap_3:
+        elif class_ids[i] == 5 and area > pier_cap_3:
             distance = 'c'
         else:
             distance = 'undefined'
@@ -218,33 +218,76 @@ def display_instances(f_ref,image,file,filename,filesize,json1, boxes, masks, cl
         mask1.append(mask)
 
 
+    print('file : ', file)
+    print('class_ids :', class_ids)
+    print('scores :', scores)
+    print('distance_type : ', distance1)
+
+
+
+
     for x,y in enumerate(scores):
         nearby_pier_cap = 'yes'
         class_id = class_ids[x]
         if y < 0.95:
             class_low = class_ids[x] # finding the class of the low scoring object
+            print('class_low : ', class_low)
             dis_type_low = distance1[x] #finding the distance type of the object
             area_low = areas[x]
             vertices_low = vertices1[x]
             #print('dis_type_low' , dis_type_low)
             if class_low == 7: #if the low scoring object is pier
                 for aa,bb in enumerate (class_ids):
+                    print('aa :', aa, '-->', ' bb :', bb)
                     if bb == 5: # locate the pier cap
                         dis_type_related = distance1[aa]
+                        print('class_id : ', class_ids[x])
+                        print('distance_type_related: ', dis_type_related)
+                        print('distance_type_low: ', dis_type_low)
+                        print('=====')
                         vertices_related = vertices1[aa]
                         if dis_type_related == dis_type_low:
                             minimum = min_dis(vertices_low,vertices_related)
                             print(minimum)
                             if minimum < 100:
                                 print( 'there is nearby pier cap')
+                                break
                             else:
+                                print('else no_pier cap')
                                 nearby_pier_cap ='no'
                         else:
                             nearby_pier_cap = 'no'
                             print('didnot find a nearby pier cap')
                             continue
-                    else:
-                        nearby_pier_cap = 'no'
+                    break
+            elif class_low == 5:
+                for aa,bb in enumerate (class_ids):
+                    print('aa :', aa, '-->', ' bb :', bb)
+                    if bb == 7: # locate the pier cap
+                        dis_type_related = distance1[aa]
+                        print('class_id : ', class_ids[x])
+                        print('distance_type_related: ', dis_type_related)
+                        print('distance_type_low: ', dis_type_low)
+                        print('=====')
+                        vertices_related = vertices1[aa]
+                        if dis_type_related == dis_type_low:
+                            minimum = min_dis(vertices_low,vertices_related)
+                            print(minimum)
+                            if minimum < 100:
+                                print( 'there is nearby pier')
+                                break
+                            else:
+                                print('else no_pier cap')
+                                nearby_pier_cap ='no'
+                        else:
+                            nearby_pier_cap = 'no'
+                            print('didnot find a nearby pier cap')
+                            continue
+                    break
+                    # else:
+                    #     print('for scores: ', y)
+                    #     print('it is going inside else')
+                    #     nearby_pier_cap = 'no'
 
         '''
         The below part is for temporal coherence
@@ -257,184 +300,120 @@ def display_instances(f_ref,image,file,filename,filesize,json1, boxes, masks, cl
         pxl = 0
 
         if f_ref == 'f1':
-            if class_ids[x] in e and class_ids[x] in d:
+            if class_ids[x] in e:
                 for m,n in enumerate(e):
                     if n == class_ids[x]:
                         Xcoordinate = Xcor5[m]
                         Ycoordinate = Ycor5[m]
                         pxl = safety_pxl +3
+
+            elif class_ids[x] in d:
                 for m,n in enumerate(d):
                     if n == class_ids[x]:
-                        Xcoordinate1 = Xcor4[m]
-                        Ycoordinate1 = Ycor4[m]
+                        Xcoordinate = Xcor4[m]
+                        Ycoordinate = Ycor4[m]
                         pxl = safety_pxl+6
-            elif class_ids[x] in d and class_ids[x] in c:
-                for m,n in enumerate(d):
-                    if n == class_ids[x]:
-                        Xcoordinate1 = Xcor4[m]
-                        Ycoordinate1 = Ycor4[m]
-                        pxl = safety_pxl+6
+
+            elif class_ids[x] in c:
                 for m,n in enumerate(c):
                     if n == class_ids[x]:
                         Xcoordinate = Xcor3[m]
                         Ycoordinate = Ycor3[m]
                         pxl = safety_pxl +9
-            elif class_ids[x] in c and class_ids[x] in b:
-                for m,n in enumerate(c):
-                    if n == class_ids[x]:
-                        Xcoordinate = Xcor3[m]
-                        Ycoordinate = Ycor3[m]
-                        pxl = safety_pxl +9
-                for m,n in enumerate(b):
-                    if n == class_ids[x]:
-                        Xcoordinate1 = Xcor2[m]
-                        Ycoordinate1 = Ycor2[m]
-                        pxl = safety_pxl+12
+
 
         if f_ref == 'f2':
             # print('f2: class_id =',class_ids[x])
             # print ('a :', a)
             # print ('e : ', e)
-            if class_ids[x] in a and class_ids[x] in e:
+            if class_ids[x] in a:
                 for m,n in enumerate(a):
                     if n == class_ids[x]:
                         Xcoordinate = Xcor1[m]
                         Ycoordinate = Ycor1[m]
                         pxl = safety_pxl +3
+
+            elif class_ids[x] in e:
                 for m,n in enumerate(e):
                     if n == class_ids[x]:
-                        Xcoordinate1 = Xcor5[m]
-                        Ycoordinate1 = Ycor5[m]
+                        Xcoordinate = Xcor5[m]
+                        Ycoordinate = Ycor5[m]
                         pxl = safety_pxl + 6
-            elif class_ids[x] in e and class_ids[x] in d:
-                for m,n in enumerate(e):
-                    if n == class_ids[x]:
-                        Xcoordinate1 = Xcor5[m]
-                        Ycoordinate1 = Ycor5[m]
-                        pxl = safety_pxl + 6
+
+            elif class_ids[x] in d:
                 for m,n in enumerate(d):
                     if n == class_ids[x]:
                         Xcoordinate = Xcor4[m]
                         Ycoordinate = Ycor4[m]
                         pxl = safety_pxl + 9
-            elif class_ids[x] in d and class_ids[x] in c:
-                for m,n in enumerate(d):
-                    if n == class_ids[x]:
-                        Xcoordinate = Xcor4[m]
-                        Ycoordinate = Ycor4[m]
-                        pxl = safety_pxl + 9
-                for m,n in enumerate(c):
-                    if n == class_ids[x]:
-                        Xcoordinate1 = Xcor3[m]
-                        Ycoordinate1 = Ycor3[m]
-                        pxl = safety_pxl +12
 
 
         if f_ref == 'f3':
-            if class_ids[x] in b and class_ids[x] in a:
+            if class_ids[x] in b:
                 for m,n in enumerate(b):
                     if n == class_ids[x]:
                         Xcoordinate = Xcor2[m]
                         Ycoordinate = Ycor2[m]
                         pxl = safety_pxl +3
+
+            elif class_ids[x] in a:
                 for m,n in enumerate(a):
                     if n == class_ids[x]:
-                        Xcoordinate1 = Xcor1[m]
-                        Ycoordinate1 = Ycor1[m]
+                        Xcoordinate = Xcor1[m]
+                        Ycoordinate = Ycor1[m]
                         pxl = safety_pxl + 6
-            elif class_ids[x] in a and class_ids[x] in e:
-                for m,n in enumerate(a):
-                    if n == class_ids[x]:
-                        Xcoordinate1 = Xcor1[m]
-                        Ycoordinate1 = Ycor1[m]
-                        pxl = safety_pxl + 6
+
+            elif class_ids[x] in e:
                 for m,n in enumerate(e):
                     if n == class_ids[x]:
                         Xcoordinate = Xcor5[m]
                         Ycoordinate = Ycor5[m]
                         pxl = safety_pxl + 9
-            elif class_ids[x] in e and class_ids[x] in d:
-                for m,n in enumerate(e):
-                    if n == class_ids[x]:
-                        Xcoordinate = Xcor5[m]
-                        Ycoordinate = Ycor5[m]
-                        pxl = safety_pxl + 9
-                for m,n in enumerate(d):
-                    if n == class_ids[x]:
-                        Xcoordinate1 = Xcor4[m]
-                        Ycoordinate1 = Ycor4[m]
-                        pxl = safety_pxl + 12
 
         if f_ref == 'f4':
-            if class_ids[x] in c and class_ids[x] in b:
+            if class_ids[x] in c:
                 for m,n in enumerate(c):
                     if n == class_ids[x]:
                         Xcoordinate = Xcor3[m]
                         Ycoordinate = Ycor3[m]
                         pxl = safety_pxl +3
 
+            elif class_ids[x] in b:
                 for m,n in enumerate(b):
                     if n == class_ids[x]:
-                        Xcoordinate1 = Xcor2[m]
-                        Ycoordinate1 = Ycor2[m]
+                        Xcoordinate = Xcor2[m]
+                        Ycoordinate = Ycor2[m]
                         pxl = safety_pxl +6
-            elif class_ids[x] in b and class_ids[x] in a:
-                for m,n in enumerate(b):
-                    if n == class_ids[x]:
-                        Xcoordinate1 = Xcor2[m]
-                        Ycoordinate1 = Ycor2[m]
-                        pxl = safety_pxl +6
+
+            elif class_ids[x] in a:
                 for m,n in enumerate(a):
                     if n == class_ids[x]:
                         Xcoordinate = Xcor1[m]
                         Ycoordinate = Ycor1[m]
                         pxl = safety_pxl +9
-            elif class_ids[x] in a and class_ids[x] in e:
-                for m,n in enumerate(a):
-                    if n == class_ids[x]:
-                        Xcoordinate = Xcor1[m]
-                        Ycoordinate = Ycor1[m]
-                        pxl = safety_pxl +9
-                for m,n in enumerate(e):
-                    if n == class_ids[x]:
-                        Xcoordinate1 = Xcor5[m]
-                        Ycoordinate1 = Ycor5[m]
-                        pxl = safety_pxl +12
 
         if f_ref == 'f5':
-            if class_ids[x] in d and class_ids[x] in c:
+            if class_ids[x] in d:
                 for m,n in enumerate(d):
                     if n == class_ids[x]:
                         Xcoordinate = Xcor4[m]
                         Ycoordinate = Ycor4[m]
                         pxl = safety_pxl +3
+
+            elif class_ids[x] in c:
                 for m,n in enumerate(c):
                     if n == class_ids[x]:
-                        Xcoordinate1 = Xcor3[m]
-                        Ycoordinate1 = Ycor3[m]
+                        Xcoordinate = Xcor3[m]
+                        Ycoordinate = Ycor3[m]
                         pxl = safety_pxl +6
-            elif class_ids[x] in c and class_ids[x] in b:
-                for m,n in enumerate(c):
-                    if n == class_ids[x]:
-                        Xcoordinate1 = Xcor3[m]
-                        Ycoordinate1 = Ycor3[m]
-                        pxl = safety_pxl +6
+
+            elif class_ids[x] in b:
                 for m,n in enumerate(b):
                     if n == class_ids[x]:
                         Xcoordinate = Xcor2[m]
                         Ycoordinate = Ycor2[m]
                         pxl = safety_pxl +9
-            elif class_ids[x] in b and class_ids[x] in a:
-                for m,n in enumerate(b):
-                    if n == class_ids[x]:
-                        Xcoordinate = Xcor2[m]
-                        Ycoordinate = Ycor2[m]
-                        pxl = safety_pxl +9
-                for m,n in enumerate(a):
-                    if n == class_ids[x]:
-                        Xcoordinate1 = Xcor1[m]
-                        Ycoordinate1 = Ycor1[m]
-                        pxl = safety_pxl +12
+
 
         y1, x1, y2, x2 = boxes[x]
         if not captions:
@@ -452,25 +431,26 @@ def display_instances(f_ref,image,file,filename,filesize,json1, boxes, masks, cl
             if nearby_pier_cap == 'no':
                 print('before continue')
             else:
-                print('filename : ', file)
-                print('f_ref : ', f_ref)
-                print('class_id : ', class_id)
-                print('label : ', label)
-                print('score : ', score)
-                print('a : ', a)
-                print('b : ', b)
-                print('c : ', c)
-                print('d : ', d)
-                print('e : ', e)
-                print('x1 : ', x1)
-                print('Xcordinate : ', Xcoordinate)
-                print('y1 : ', y1)
-                print('Ycordinate : ', Ycoordinate)
+                # print('filename : ', file)
+                # print('f_ref : ', f_ref)
+                # print('class_id : ', class_id, ' class_id[x] : ' , class_ids[x] )
+                # print('label : ', label)
+                # print('score : ', score)
+                # print('a : ', a)
+                # print('b : ', b)
+                # print('c : ', c)
+                # print('d : ', d)
+                # print('e : ', e)
+                # print('pxl : ', pxl)
+                # print('x1 : ', x1)
+                # print('Xcordinate : ', Xcoordinate)
+                # print('y1 : ', y1)
+                # print('Ycordinate : ', Ycoordinate)
                 if f_ref == 'f1':
-                    if score >= 0.9:
+                    if score >= 0.95:
                         mask_color(class_id, masked_image, mask)
-                    elif score <0.9 and score >.50 and class_id in e and class_id in d and check(x1,Xcoordinate,pxl)==True and check_y(y1,Ycoordinate,pxl)== True and check(x1,Xcoordinate1,pxl)==True and check_y(y1,Ycoordinate1,pxl)== True:
-                        mask_color(label,masked_image, mask)
+                    elif score <0.95 and score >.50 and class_id in e and check(x1,Xcoordinate,pxl)==True and check_y(y1,Ycoordinate,pxl)== True:
+                        mask_color(class_id, masked_image, mask)
                         cl.append(class_id)
                         Xco.append(x1)
                         Yco.append(y1)
@@ -478,7 +458,7 @@ def display_instances(f_ref,image,file,filename,filesize,json1, boxes, masks, cl
                         # if not exists:
                         #     copyfile(src,dst+file)
 
-                    elif score <0.9 and score >.50 and class_id in d and class_id in c and check(x1,Xcoordinate,pxl)==True and check_y(y1,Ycoordinate,pxl)== True and check(x1,Xcoordinate1,pxl)==True and check_y(y1,Ycoordinate1,pxl)== True:
+                    elif score <0.95 and score >.50 and class_id in d and check(x1,Xcoordinate,pxl)==True and check_y(y1,Ycoordinate,pxl)== True:
                         mask_color(class_id,masked_image, mask)
                         cl.append(class_id)
                         Xco.append(x1)
@@ -486,7 +466,7 @@ def display_instances(f_ref,image,file,filename,filesize,json1, boxes, masks, cl
                         # if not exists:
                         #     copyfile(src,dst+file)
 
-                    elif score <0.9 and score >.50 and class_id in c and class_id in b and check(x1,Xcoordinate,pxl)==True and check_y(y1,Ycoordinate,pxl)== True and check(x1,Xcoordinate1,pxl)==True and check_y(y1,Ycoordinate1,pxl)== True:
+                    elif score <0.95 and score >.50 and class_id in c and check(x1,Xcoordinate,pxl)==True and check_y(y1,Ycoordinate,pxl)== True:
                         mask_color(class_id,masked_image, mask)
                         cl.append(class_id)
                         Xco.append(x1)
@@ -497,28 +477,10 @@ def display_instances(f_ref,image,file,filename,filesize,json1, boxes, masks, cl
                         continue
 
                 if f_ref == 'f2':
-                    # print('filename : ', file)
-                    # print('class_id : ', class_id)
-                    # print('a : ', a)
-                    # print('b : ', b)
-                    # print('c : ', c)
-                    # print('d : ', d)
-                    # print('e : ', e)
-                    # print('x1 : ', x1)
-                    # print('Xcordinate : ', Xcordinate)
-                    # print('y1 : ', y1)
-                    # print('Ycordinate : ', Ycordinate)
-                    if score >= 0.9:
-                        mask_color(class_id, masked_image, mask)
-                    elif score <0.9 and score >.50 and class_id in a and class_id in e and check(x1,Xcoordinate,pxl)==True and check_y(y1,Ycoordinate,pxl)== True and check(x1,Xcoordinate1,pxl)==True and check_y(y1,Ycoordinate1,pxl)== True:
-                        mask_color(label,masked_image, mask)
-                        cl.append(class_id)
-                        Xco.append(x1)
-                        Yco.append(y1)
-                        # if not exists:
-                        #     copyfile(src,dst+file)
 
-                    elif score <0.9 and score >.50 and class_id in e and class_id in d and check(x1,Xcoordinate,pxl)==True and check_y(y1,Ycoordinate,pxl)== True and check(x1,Xcoordinate1,pxl)==True and check_y(y1,Ycoordinate1,pxl)== True:
+                    if score >= 0.95:
+                        mask_color(class_id, masked_image, mask)
+                    elif score <0.95 and score >.50 and class_id in a and check(x1,Xcoordinate,pxl)==True and check_y(y1,Ycoordinate,pxl)== True:
                         mask_color(class_id, masked_image, mask)
                         cl.append(class_id)
                         Xco.append(x1)
@@ -526,7 +488,15 @@ def display_instances(f_ref,image,file,filename,filesize,json1, boxes, masks, cl
                         # if not exists:
                         #     copyfile(src,dst+file)
 
-                    elif score <0.9 and score >.50 and class_id in d and class_id in c and check(x1,Xcoordinate,pxl)==True and check_y(y1,Ycoordinate,pxl)== True and check(x1,Xcoordinate1,pxl)==True and check_y(y1,Ycoordinate1,pxl)== True:
+                    elif score <0.95 and score >.50 and class_id in e and check(x1,Xcoordinate,pxl)==True and check_y(y1,Ycoordinate,pxl)== True:
+                        mask_color(class_id, masked_image, mask)
+                        cl.append(class_id)
+                        Xco.append(x1)
+                        Yco.append(y1)
+                        # if not exists:
+                        #     copyfile(src,dst+file)
+
+                    elif score <0.95 and score >.50 and class_id in d and check(x1,Xcoordinate,pxl)==True and check_y(y1,Ycoordinate,pxl)== True:
                         mask_color(class_id, masked_image, mask)
                         cl.append(class_id)
                         Xco.append(x1)
@@ -537,17 +507,17 @@ def display_instances(f_ref,image,file,filename,filesize,json1, boxes, masks, cl
                         continue
 
                 if f_ref == 'f3':
-                    if score >= 0.9:
+                    if score >= 0.95:
                         mask_color(class_id,masked_image, mask)
-                    elif score <0.9 and score >.50 and class_id in b and class_id in a and check(x1,Xcoordinate,pxl)==True and check_y(y1,Ycoordinate,pxl)== True and check(x1,Xcoordinate1,pxl)==True and check_y(y1,Ycoordinate1,pxl)== True:
-                        mask_color(label,masked_image, mask)
+                    elif score <0.95 and score >.50 and class_id in b and check(x1,Xcoordinate,pxl)==True and check_y(y1,Ycoordinate,pxl)== True:
+                        mask_color(class_id, masked_image, mask)
                         cl.append(class_id)
                         Xco.append(x1)
                         Yco.append(y1)
                         # if not exists:
                         #     copyfile(src,dst+file)
 
-                    elif score <0.9 and score >.50 and class_id in a and class_id in e and check(x1,Xcoordinate,pxl)==True and check_y(y1,Ycoordinate,pxl)== True and check(x1,Xcoordinate1,pxl)==True and check_y(y1,Ycoordinate1,pxl)== True:
+                    elif score <0.95 and score >.50 and class_id in a and check(x1,Xcoordinate,pxl)==True and check_y(y1,Ycoordinate,pxl)== True:
                         mask_color(class_id,masked_image, mask)
                         cl.append(class_id)
                         Xco.append(x1)
@@ -555,7 +525,7 @@ def display_instances(f_ref,image,file,filename,filesize,json1, boxes, masks, cl
                         # if not exists:
                         #     copyfile(src,dst+file)
 
-                    elif score <0.9 and score >.50 and class_id in e and class_id in d and check(x1,Xcoordinate,pxl)==True and check_y(y1,Ycoordinate,pxl)== True and check(x1,Xcoordinate1,pxl)==True and check_y(y1,Ycoordinate1,pxl)== True:
+                    elif score <0.95 and score >.50 and class_id in e and check(x1,Xcoordinate,pxl)==True and check_y(y1,Ycoordinate,pxl)== True:
                         mask_color(class_id,masked_image, mask)
                         cl.append(class_id)
                         Xco.append(x1)
@@ -564,17 +534,9 @@ def display_instances(f_ref,image,file,filename,filesize,json1, boxes, masks, cl
                         #     copyfile(src,dst+file)
 
                 if f_ref == 'f4':
-                    if score >= 0.9:
+                    if score >= 0.95:
                         mask_color(class_id,masked_image, mask)
-                    elif score <0.9 and score >.50 and class_id in c and class_id in b and check(x1,Xcoordinate,pxl)==True and check_y(y1,Ycoordinate,pxl)== True and check(x1,Xcoordinate1,pxl)==True and check_y(y1,Ycoordinate1,pxl)== True:
-                        mask_color(label,masked_image, mask)
-                        cl.append(class_id)
-                        Xco.append(x1)
-                        Yco.append(y1)
-                        # if not exists:
-                        #     copyfile(src,dst+file)
-
-                    elif score <0.9 and score >.50 and class_id in b and class_id in a and check(x1,Xcoordinate,pxl)==True and check_y(y1,Ycoordinate,pxl)== True and check(x1,Xcoordinate1,pxl)==True and check_y(y1,Ycoordinate1,pxl)== True:
+                    elif score <0.95 and score >.50 and class_id in c and check(x1,Xcoordinate,pxl)==True and check_y(y1,Ycoordinate,pxl)== True:
                         mask_color(class_id, masked_image, mask)
                         cl.append(class_id)
                         Xco.append(x1)
@@ -582,7 +544,15 @@ def display_instances(f_ref,image,file,filename,filesize,json1, boxes, masks, cl
                         # if not exists:
                         #     copyfile(src,dst+file)
 
-                    elif score <0.9 and score >.50 and class_id in a and class_id in e and check(x1,Xcoordinate,pxl)==True and check_y(y1,Ycoordinate,pxl)== True and check(x1,Xcoordinate1,pxl)==True and check_y(y1,Ycoordinate1,pxl)== True:
+                    elif score <0.95 and score >.50 and class_id in b and check(x1,Xcoordinate,pxl)==True and check_y(y1,Ycoordinate,pxl)== True:
+                        mask_color(class_id, masked_image, mask)
+                        cl.append(class_id)
+                        Xco.append(x1)
+                        Yco.append(y1)
+                        # if not exists:
+                        #     copyfile(src,dst+file)
+
+                    elif score <0.95 and score >.50 and class_id in a and check(x1,Xcoordinate,pxl)==True and check_y(y1,Ycoordinate,pxl)== True:
                         mask_color(class_id,masked_image, mask)
                         cl.append(class_id)
                         Xco.append(x1)
@@ -593,17 +563,9 @@ def display_instances(f_ref,image,file,filename,filesize,json1, boxes, masks, cl
                         continue
 
                 if f_ref == 'f5':
-                    if score >= 0.9:
+                    if score >= 0.95:
                         mask_color(class_id, masked_image, mask)
-                    elif score <0.9 and score >.50 and class_id in d and class_id in c and check(x1,Xcoordinate,pxl)==True and check_y(y1,Ycoordinate,pxl)== True and check(x1,Xcoordinate1,pxl)==True and check_y(y1,Ycoordinate1,pxl)== True:
-                        mask_color(label,masked_image, mask)
-                        cl.append(class_id)
-                        Xco.append(x1)
-                        Yco.append(y1)
-                        # if not exists:
-                        #     copyfile(src,dst+file)
-
-                    elif score <0.9 and score >.50 and class_id in c and class_id in b and check(x1,Xcoordinate,pxl)==True and check_y(y1,Ycoordinate,pxl)== True and check(x1,Xcoordinate1,pxl)==True and check_y(y1,Ycoordinate1,pxl)== True:
+                    elif score <0.95 and score >.50 and class_id in d and check(x1,Xcoordinate,pxl)==True and check_y(y1,Ycoordinate,pxl)== True:
                         mask_color(class_id, masked_image, mask)
                         cl.append(class_id)
                         Xco.append(x1)
@@ -611,7 +573,15 @@ def display_instances(f_ref,image,file,filename,filesize,json1, boxes, masks, cl
                         # if not exists:
                         #     copyfile(src,dst+file)
 
-                    elif score <0.9 and score >.50 and class_id in b and class_id in a and check(x1,Xcoordinate,pxl)==True and check_y(y1,Ycoordinate,pxl)== True and check(x1,Xcoordinate1,pxl)==True and check_y(y1,Ycoordinate1,pxl)== True:
+                    elif score <0.95 and score >.50 and class_id in c and check(x1,Xcoordinate,pxl)==True and check_y(y1,Ycoordinate,pxl)== True:
+                        mask_color(class_id, masked_image, mask)
+                        cl.append(class_id)
+                        Xco.append(x1)
+                        Yco.append(y1)
+                        # if not exists:
+                        #     copyfile(src,dst+file)
+
+                    elif score <0.95 and score >.50 and class_id in b and check(x1,Xcoordinate,pxl)==True and check_y(y1,Ycoordinate,pxl)== True:
                         mask_color(class_id, masked_image, mask)
                         cl.append(class_id)
                         Xco.append(x1)
@@ -624,6 +594,7 @@ def display_instances(f_ref,image,file,filename,filesize,json1, boxes, masks, cl
                 #
                 # ax.text(x1,y1+2, caption, color = 'w', size =11, backgroundcolor ='none')
                 # mask_color(class_id, masked_image,mask1[x])
+    print('******')
 
     ax.imshow(masked_image.astype(np.uint8))
     if auto_show:

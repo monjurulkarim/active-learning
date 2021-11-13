@@ -1,4 +1,4 @@
-def compute_precision_recall_spatial_correlation(gt_boxes, gt_class_ids, gt_masks,
+def compute_precision_recall_spatial_correlation_temporal(gt_boxes, gt_class_ids, gt_masks,
                     pred_boxes, pred_class_ids, pred_scores, pred_masks,
                     iou_threshold=0.5, score_threshold=0.0):
     """Finds matches between prediction and ground truth instances.
@@ -34,6 +34,8 @@ def compute_precision_recall_spatial_correlation(gt_boxes, gt_class_ids, gt_mask
     vertices1 = []
     mask1 = []
     total_predicted = []
+    safety_pxl = 30
+    pxl = safety_pxl+12
     for i in range(len(pred_boxes)):
         # Find best matching ground truth box
         # 1. Sort matches by score
@@ -61,17 +63,17 @@ def compute_precision_recall_spatial_correlation(gt_boxes, gt_class_ids, gt_mask
         pier_cap_3 = 34500
 
 
-        if label == 'pier' and area > 10 and area < pier_2:
+        if class_id == 7 and area > 10 and area < pier_2:
             distance = 'f'
-        elif label == 'pier' and area > pier_2 and area < pier_3:
+        elif class_id == 7 and area > pier_2 and area < pier_3:
             distance ='m'
-        elif label == 'pier' and area > pier_3:
+        elif class_id == 7 and area > pier_3:
             distance = 'c'
-        elif label == 'pier cap' and area > 10 and area < pier_cap_2:
+        elif class_id == 5 and area > 10 and area < pier_cap_2:
             distance = 'f'
-        elif label == 'pier cap' and area > pier_cap_2 and area < pier_cap_3:
+        elif class_id == 5 and area > pier_cap_2 and area < pier_cap_3:
             distance ='m'
-        elif label == 'pier cap' and area > pier_cap_3:
+        elif class_id == 5 and area > pier_cap_3:
             distance = 'c'
         else:
             distance = 'undefined'
@@ -89,25 +91,293 @@ def compute_precision_recall_spatial_correlation(gt_boxes, gt_class_ids, gt_mask
             vertices_low = vertices1[x]
             #print('dis_type_low' , dis_type_low)
             if class_low == 7: #if the low scoring object is pier
-                for a,b in enumerate (class_ids):
-                    if b == 5: # locate the pier cap
-                        dis_type_related = distance1[a]
-                        vertices_related = vertices1[a]
+                for aa,bb in enumerate (class_ids):
+                    if bb == 5: # locate the pier cap
+                        dis_type_related = distance1[aa]
+                        vertices_related = vertices1[aa]
                         if dis_type_related == dis_type_low:
                             minimum = min_dis(vertices_low,vertices_related)
                             print(minimum)
                             if minimum < 100:
                                 print( 'there is nearby pier cap')
+                                break
                             else:
                                 nearby_pier_cap ='no'
+                                break
                         else:
                             nearby_pier_cap = 'no'
                             print('didnot find a nearby pier cap')
                             continue
-                    else:
-                        nearby_pier_cap = 'no'
+                    break
+                    # else:
+                    #     nearby_pier_cap = 'no'
+        Xcoordinate = 0
+        Ycoordinate = 0
+        Xcoordinate1 = 0
+        Ycoordinate1 = 0
+        pxl = 0
+
+        if f_ref == 'f1':
+            if class_ids[x] in e:
+                for m,n in enumerate(e):
+                    if n == class_ids[x]:
+                        Xcoordinate = Xcor5[m]
+                        Ycoordinate = Ycor5[m]
+                        pxl = safety_pxl +3
+
+            elif class_ids[x] in d:
+                for m,n in enumerate(d):
+                    if n == class_ids[x]:
+                        Xcoordinate = Xcor4[m]
+                        Ycoordinate = Ycor4[m]
+                        pxl = safety_pxl+6
+
+            elif class_ids[x] in c:
+                for m,n in enumerate(c):
+                    if n == class_ids[x]:
+                        Xcoordinate = Xcor3[m]
+                        Ycoordinate = Ycor3[m]
+                        pxl = safety_pxl +9
+
+
+        if f_ref == 'f2':
+            # print('f2: class_id =',class_ids[x])
+            # print ('a :', a)
+            # print ('e : ', e)
+            if class_ids[x] in a:
+                for m,n in enumerate(a):
+                    if n == class_ids[x]:
+                        Xcoordinate = Xcor1[m]
+                        Ycoordinate = Ycor1[m]
+                        pxl = safety_pxl +3
+
+            elif class_ids[x] in e:
+                for m,n in enumerate(e):
+                    if n == class_ids[x]:
+                        Xcoordinate = Xcor5[m]
+                        Ycoordinate = Ycor5[m]
+                        pxl = safety_pxl + 6
+
+            elif class_ids[x] in d:
+                for m,n in enumerate(d):
+                    if n == class_ids[x]:
+                        Xcoordinate = Xcor4[m]
+                        Ycoordinate = Ycor4[m]
+                        pxl = safety_pxl + 9
+
+
+        if f_ref == 'f3':
+            if class_ids[x] in b:
+                for m,n in enumerate(b):
+                    if n == class_ids[x]:
+                        Xcoordinate = Xcor2[m]
+                        Ycoordinate = Ycor2[m]
+                        pxl = safety_pxl +3
+
+            elif class_ids[x] in a:
+                for m,n in enumerate(a):
+                    if n == class_ids[x]:
+                        Xcoordinate = Xcor1[m]
+                        Ycoordinate = Ycor1[m]
+                        pxl = safety_pxl + 6
+
+            elif class_ids[x] in e:
+                for m,n in enumerate(e):
+                    if n == class_ids[x]:
+                        Xcoordinate = Xcor5[m]
+                        Ycoordinate = Ycor5[m]
+                        pxl = safety_pxl + 9
+
+        if f_ref == 'f4':
+            if class_ids[x] in c:
+                for m,n in enumerate(c):
+                    if n == class_ids[x]:
+                        Xcoordinate = Xcor3[m]
+                        Ycoordinate = Ycor3[m]
+                        pxl = safety_pxl +3
+
+            elif class_ids[x] in b:
+                for m,n in enumerate(b):
+                    if n == class_ids[x]:
+                        Xcoordinate = Xcor2[m]
+                        Ycoordinate = Ycor2[m]
+                        pxl = safety_pxl +6
+
+            elif class_ids[x] in a:
+                for m,n in enumerate(a):
+                    if n == class_ids[x]:
+                        Xcoordinate = Xcor1[m]
+                        Ycoordinate = Ycor1[m]
+                        pxl = safety_pxl +9
+
+        if f_ref == 'f5':
+            if class_ids[x] in d:
+                for m,n in enumerate(d):
+                    if n == class_ids[x]:
+                        Xcoordinate = Xcor4[m]
+                        Ycoordinate = Ycor4[m]
+                        pxl = safety_pxl +3
+
+            elif class_ids[x] in c:
+                for m,n in enumerate(c):
+                    if n == class_ids[x]:
+                        Xcoordinate = Xcor3[m]
+                        Ycoordinate = Ycor3[m]
+                        pxl = safety_pxl +6
+
+            elif class_ids[x] in b:
+                for m,n in enumerate(b):
+                    if n == class_ids[x]:
+                        Xcoordinate = Xcor2[m]
+                        Ycoordinate = Ycor2[m]
+                        pxl = safety_pxl +9
+
+
         if nearby_pier_cap == 'yes':
-            total_predicted.append(score)
+            if f_ref == 'f1':
+                if score >= 0.9:
+                    total_predicted.append(score)
+                elif score <0.9 and score >.50 and class_id in e and check(x1,Xcoordinate,pxl)==True and check_y(y1,Ycoordinate,pxl)== True:
+                    total_predicted.append(score)
+                    cl.append(class_id)
+                    Xco.append(x1)
+                    Yco.append(y1)
+
+                    # if not exists:
+                    #     copyfile(src,dst+file)
+
+                elif score <0.9 and score >.50 and class_id in d and check(x1,Xcoordinate,pxl)==True and check_y(y1,Ycoordinate,pxl)== True:
+                    total_predicted.append(score)
+                    cl.append(class_id)
+                    Xco.append(x1)
+                    Yco.append(y1)
+                    # if not exists:
+                    #     copyfile(src,dst+file)
+
+                elif score <0.9 and score >.50 and class_id in c and check(x1,Xcoordinate,pxl)==True and check_y(y1,Ycoordinate,pxl)== True:
+                    total_predicted.append(score)
+                    cl.append(class_id)
+                    Xco.append(x1)
+                    Yco.append(y1)
+                    # if not exists:
+                    #     copyfile(src,dst+file)
+                else:
+                    continue
+
+            if f_ref == 'f2':
+
+                if score >= 0.9:
+                    total_predicted.append(score)
+                elif score <0.9 and score >.50 and class_id in a and check(x1,Xcoordinate,pxl)==True and check_y(y1,Ycoordinate,pxl)== True:
+                    total_predicted.append(score)
+                    cl.append(class_id)
+                    Xco.append(x1)
+                    Yco.append(y1)
+                    # if not exists:
+                    #     copyfile(src,dst+file)
+
+                elif score <0.9 and score >.50 and class_id in e and check(x1,Xcoordinate,pxl)==True and check_y(y1,Ycoordinate,pxl)== True:
+                    total_predicted.append(score)
+                    cl.append(class_id)
+                    Xco.append(x1)
+                    Yco.append(y1)
+                    # if not exists:
+                    #     copyfile(src,dst+file)
+
+                elif score <0.9 and score >.50 and class_id in d and check(x1,Xcoordinate,pxl)==True and check_y(y1,Ycoordinate,pxl)== True:
+                    total_predicted.append(score)
+                    cl.append(class_id)
+                    Xco.append(x1)
+                    Yco.append(y1)
+                    # if not exists:
+                    #     copyfile(src,dst+file)
+                else:
+                    continue
+
+            if f_ref == 'f3':
+                if score >= 0.9:
+                    total_predicted.append(score)
+                elif score <0.9 and score >.50 and class_id in b and check(x1,Xcoordinate,pxl)==True and check_y(y1,Ycoordinate,pxl)== True:
+                    total_predicted.append(score)
+                    cl.append(class_id)
+                    Xco.append(x1)
+                    Yco.append(y1)
+                    # if not exists:
+                    #     copyfile(src,dst+file)
+
+                elif score <0.9 and score >.50 and class_id in a and check(x1,Xcoordinate,pxl)==True and check_y(y1,Ycoordinate,pxl)== True:
+                    total_predicted.append(score)
+                    cl.append(class_id)
+                    Xco.append(x1)
+                    Yco.append(y1)
+                    # if not exists:
+                    #     copyfile(src,dst+file)
+
+                elif score <0.9 and score >.50 and class_id in e and check(x1,Xcoordinate,pxl)==True and check_y(y1,Ycoordinate,pxl)== True:
+                    total_predicted.append(score)
+                    cl.append(class_id)
+                    Xco.append(x1)
+                    Yco.append(y1)
+                    # if not exists:
+                    #     copyfile(src,dst+file)
+
+            if f_ref == 'f4':
+                if score >= 0.9:
+                    total_predicted.append(score)
+                elif score <0.9 and score >.50 and class_id in c and check(x1,Xcoordinate,pxl)==True and check_y(y1,Ycoordinate,pxl)== True:
+                    total_predicted.append(score)
+                    cl.append(class_id)
+                    Xco.append(x1)
+                    Yco.append(y1)
+                    # if not exists:
+                    #     copyfile(src,dst+file)
+
+                elif score <0.9 and score >.50 and class_id in b and check(x1,Xcoordinate,pxl)==True and check_y(y1,Ycoordinate,pxl)== True:
+                    total_predicted.append(score)
+                    cl.append(class_id)
+                    Xco.append(x1)
+                    Yco.append(y1)
+                    # if not exists:
+                    #     copyfile(src,dst+file)
+
+                elif score <0.9 and score >.50 and class_id in a and check(x1,Xcoordinate,pxl)==True and check_y(y1,Ycoordinate,pxl)== True:
+                    total_predicted.append(score)
+                    cl.append(class_id)
+                    Xco.append(x1)
+                    Yco.append(y1)
+                    # if not exists:
+                    #     copyfile(src,dst+file)
+                else:
+                    continue
+
+            if f_ref == 'f5':
+                if score >= 0.9:
+                    total_predicted.append(score)
+                elif score <0.9 and score >.50 and class_id in d and check(x1,Xcoordinate,pxl)==True and check_y(y1,Ycoordinate,pxl)== True:
+                    total_predicted.append(score)
+                    cl.append(class_id)
+                    Xco.append(x1)
+                    Yco.append(y1)
+                    # if not exists:
+                    #     copyfile(src,dst+file)
+
+                elif score <0.9 and score >.50 and class_id in c and check(x1,Xcoordinate,pxl)==True and check_y(y1,Ycoordinate,pxl)== True:
+                    total_predicted.append(score)
+                    cl.append(class_id)
+                    Xco.append(x1)
+                    Yco.append(y1)
+                    # if not exists:
+                    #     copyfile(src,dst+file)
+
+                elif score <0.9 and score >.50 and class_id in b and check(x1,Xcoordinate,pxl)==True and check_y(y1,Ycoordinate,pxl)== True:
+                    total_predicted.append(score)
+                    cl.append(class_id)
+                    Xco.append(x1)
+                    Yco.append(y1)
+                    # if not exists:
+                    #     copyfile(src,dst+file)
+                else:
+                    continue
         else:
             continue
 
@@ -128,10 +398,165 @@ def compute_precision_recall_spatial_correlation(gt_boxes, gt_class_ids, gt_mask
             # Do we have a match?
             if pred_class_ids[i] == gt_class_ids[j]:
                 if nearby_pier_cap == 'yes':
-                    match_count += 1
-                    gt_match[j] = x
-                    pred_match[i] = j
-                    break
+                    if f_ref == 'f1':
+                        if score >= 0.9:
+                            match_count += 1
+                            gt_match[j] = x
+                            pred_match[i] = j
+                            break
+                        elif score <0.9 and score >.50 and class_id in e and check(x1,Xcoordinate,pxl)==True and check_y(y1,Ycoordinate,pxl)== True:
+                            match_count += 1
+                            gt_match[j] = x
+                            pred_match[i] = j
+                            break
+
+                            # if not exists:
+                            #     copyfile(src,dst+file)
+
+                        elif score <0.9 and score >.50 and class_id in d and check(x1,Xcoordinate,pxl)==True and check_y(y1,Ycoordinate,pxl)== True:
+                            match_count += 1
+                            gt_match[j] = x
+                            pred_match[i] = j
+                            break
+                            # if not exists:
+                            #     copyfile(src,dst+file)
+
+                        elif score <0.9 and score >.50 and class_id in c and check(x1,Xcoordinate,pxl)==True and check_y(y1,Ycoordinate,pxl)== True:
+                            match_count += 1
+                            gt_match[j] = x
+                            pred_match[i] = j
+                            break
+                            # if not exists:
+                            #     copyfile(src,dst+file)
+                        else:
+                            continue
+
+                    if f_ref == 'f2':
+
+                        if score >= 0.9:
+                            match_count += 1
+                            gt_match[j] = x
+                            pred_match[i] = j
+                            break
+                        elif score <0.9 and score >.50 and class_id in a and check(x1,Xcoordinate,pxl)==True and check_y(y1,Ycoordinate,pxl)== True:
+                            match_count += 1
+                            gt_match[j] = x
+                            pred_match[i] = j
+                            break
+                            # if not exists:
+                            #     copyfile(src,dst+file)
+
+                        elif score <0.9 and score >.50 and class_id in e and check(x1,Xcoordinate,pxl)==True and check_y(y1,Ycoordinate,pxl)== True:
+                            match_count += 1
+                            gt_match[j] = x
+                            pred_match[i] = j
+                            break
+                            # if not exists:
+                            #     copyfile(src,dst+file)
+
+                        elif score <0.9 and score >.50 and class_id in d and check(x1,Xcoordinate,pxl)==True and check_y(y1,Ycoordinate,pxl)== True:
+                            match_count += 1
+                            gt_match[j] = x
+                            pred_match[i] = j
+                            break
+                            # if not exists:
+                            #     copyfile(src,dst+file)
+                        else:
+                            continue
+
+                    if f_ref == 'f3':
+                        if score >= 0.9:
+                            match_count += 1
+                            gt_match[j] = x
+                            pred_match[i] = j
+                            break
+                        elif score <0.9 and score >.50 and class_id in b and check(x1,Xcoordinate,pxl)==True and check_y(y1,Ycoordinate,pxl)== True:
+                            match_count += 1
+                            gt_match[j] = x
+                            pred_match[i] = j
+                            break
+                            # if not exists:
+                            #     copyfile(src,dst+file)
+
+                        elif score <0.9 and score >.50 and class_id in a and check(x1,Xcoordinate,pxl)==True and check_y(y1,Ycoordinate,pxl)== True:
+                            match_count += 1
+                            gt_match[j] = x
+                            pred_match[i] = j
+                            break
+                            # if not exists:
+                            #     copyfile(src,dst+file)
+
+                        elif score <0.9 and score >.50 and class_id in e and check(x1,Xcoordinate,pxl)==True and check_y(y1,Ycoordinate,pxl)== True:
+                            match_count += 1
+                            gt_match[j] = x
+                            pred_match[i] = j
+                            break
+                            # if not exists:
+                            #     copyfile(src,dst+file)
+
+                    if f_ref == 'f4':
+                        if score >= 0.9:
+                            match_count += 1
+                            gt_match[j] = x
+                            pred_match[i] = j
+                            break
+                        elif score <0.9 and score >.50 and class_id in c and check(x1,Xcoordinate,pxl)==True and check_y(y1,Ycoordinate,pxl)== True:
+                            match_count += 1
+                            gt_match[j] = x
+                            pred_match[i] = j
+                            break
+                            # if not exists:
+                            #     copyfile(src,dst+file)
+
+                        elif score <0.9 and score >.50 and class_id in b and check(x1,Xcoordinate,pxl)==True and check_y(y1,Ycoordinate,pxl)== True:
+                            match_count += 1
+                            gt_match[j] = x
+                            pred_match[i] = j
+                            break
+                            # if not exists:
+                            #     copyfile(src,dst+file)
+
+                        elif score <0.9 and score >.50 and class_id in a and check(x1,Xcoordinate,pxl)==True and check_y(y1,Ycoordinate,pxl)== True:
+                            match_count += 1
+                            gt_match[j] = x
+                            pred_match[i] = j
+                            break
+                            # if not exists:
+                            #     copyfile(src,dst+file)
+                        else:
+                            continue
+
+                    if f_ref == 'f5':
+                        if score >= 0.9:
+                            match_count += 1
+                            gt_match[j] = x
+                            pred_match[i] = j
+                            break
+                        elif score <0.9 and score >.50 and class_id in d and check(x1,Xcoordinate,pxl)==True and check_y(y1,Ycoordinate,pxl)== True:
+                            match_count += 1
+                            gt_match[j] = x
+                            pred_match[i] = j
+                            break
+                            # if not exists:
+                            #     copyfile(src,dst+file)
+
+                        elif score <0.9 and score >.50 and class_id in c and check(x1,Xcoordinate,pxl)==True and check_y(y1,Ycoordinate,pxl)== True:
+                            match_count += 1
+                            gt_match[j] = x
+                            pred_match[i] = j
+                            break
+                            # if not exists:
+                            #     copyfile(src,dst+file)
+
+                        elif score <0.9 and score >.50 and class_id in b and check(x1,Xcoordinate,pxl)==True and check_y(y1,Ycoordinate,pxl)== True:
+                            match_count += 1
+                            gt_match[j] = x
+                            pred_match[i] = j
+                            break
+                            # if not exists:
+                            #     copyfile(src,dst+file)
+                        else:
+                            continue
                 else:
                     continue
 

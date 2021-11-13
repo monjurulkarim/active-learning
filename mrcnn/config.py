@@ -52,7 +52,7 @@ class Config(object):
     # You can also provide a callable that should have the signature
     # of model.resnet_graph. If you do so, you need to supply a callable
     # to COMPUTE_BACKBONE_SHAPE as well
-    BACKBONE = "resnet50" # Raju: Change it back to resnet101
+    BACKBONE = "resnet50" # You can change it to resnet101
 
     # Only useful if you supply a callable to BACKBONE. Should compute
     # the shape of each layer of the FPN Pyramid.
@@ -70,7 +70,7 @@ class Config(object):
     TOP_DOWN_PYRAMID_SIZE = 256
 
     # Number of classification classes (including background)
-    NUM_CLASSES = 1 +10  # Override in sub-classes #Raju: Num_Classes may have to change
+    NUM_CLASSES = 1 +10  # Override in sub-classes 
 
     # Length of square anchor side in pixels
     RPN_ANCHOR_SCALES = (32, 64, 128, 256, 512)

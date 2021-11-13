@@ -36,7 +36,7 @@ import skimage.draw
 from imgaug import augmenters as iaa
 
 # Root directory of the project
-ROOT_DIR = os.path.abspath("../../")
+ROOT_DIR = os.path.abspath("../")
 
 # Import Mask RCNN
 sys.path.append(ROOT_DIR)  # To find local version of the library
@@ -45,7 +45,7 @@ from mrcnn import model as modellib, utils
 
 # Path to trained weights file
 COCO_WEIGHTS_PATH = os.path.join(ROOT_DIR, "mask_rcnn_coco.h5")
-custom_weights_path = 'C:/Users/mk5n2/logs/roi20181114T2134-resnet50/mask_rcnn_roi_0040.h5'  #Change to your directory
+#custom_weights_path = '.../path/to/your/custom weights.../mask_rcnn_custom.h5'  #Change to your directory
 
 # Directory to save logs and model checkpoints, if not provided
 # through the command line argument --logs
@@ -89,6 +89,8 @@ class CustomDataset(utils.Dataset):
         subset: Subset to load: train or val
         """
         # Add classes. We have only ten classes to add.
+        # change according to your class name 
+        #========================================
         self.add_class("roi", 1, "barrier")
         self.add_class("roi", 2, "Bearing") #raju:
         self.add_class("roi", 3, "bracket")
@@ -99,6 +101,7 @@ class CustomDataset(utils.Dataset):
         self.add_class("roi", 8, "Rivet")
         self.add_class("roi", 9, "slab")
         self.add_class("roi", 10, "truss")
+        #========================================
 
 
 
@@ -185,6 +188,8 @@ class CustomDataset(utils.Dataset):
         # In the dataset, pictures are labeled with name 'Girder', etc.
         for i, p in enumerate(class_names):
         #"name" is the attributes name decided when labeling, etc. 'region_attributes': {name:'a'}#
+        # change according to your class names 
+        #========================================
             if p['Name'] == 'barrier':
                 class_ids[i] = 1
             elif p['Name'] == 'Bearing':
@@ -205,6 +210,7 @@ class CustomDataset(utils.Dataset):
                 class_ids[i] = 9
             elif p['Name'] == 'truss':
                 class_ids[i] = 10
+         #======================================
             #assert code here to extend to other labels
         class_ids = class_ids.astype(int)
         #Return mask, and array of class IDs of each instance. Since we have
@@ -235,7 +241,7 @@ def train(model):
 
     # Training dataset.
     dataset_train = CustomDataset()
-    dataset_folder = 'C:/Users/mk5n2/Mask/Inspire/CustomImages/' # change to your directory
+    dataset_folder = 'CustomImages/' # change to your directory
     dataset_train.load_custom(dataset_folder, "train")
     dataset_train.prepare()
 
@@ -261,8 +267,8 @@ def train(model):
     # no need to train all layers, just the heads should do it.
     print("Training network heads")
     model.train(dataset_train, dataset_val,
-                learning_rate=Config.LEARNING_RATE, # Raju: Config, previously config
-                epochs=80,
+                learning_rate=Config.LEARNING_RATE, 
+                epochs=20,
                 layers='heads')
 
     # print("Training ResNet layer 5+")

@@ -1,0 +1,4 @@
+Put the following file in here:
+
+1) training images
+2) annotation file (format: json)
