@@ -20,6 +20,7 @@ This is the implementation code for the paper,<a href="https://arxiv.org/pdf/210
 
 ## Getting Started
 * Install the required dependencies: (for reference see [how_to_install.pdf](https://github.com/monjurulkarim/Tracking_manufacturing/blob/master/how_to_install.pdf) )
+* [Download](https://drive.google.com/drive/folders/1vTNgPi2SSefO9fzxHxCa2Sgmec_B8MkM?usp=sharing): Download the initial dataset from here.
 *  [custom.py](https://github.com/monjurulkarim/active_learning/blob/main/custom.py) : this code is used for loading data and training the model
 *  [Training.ipynb](https://github.com/monjurulkarim/active_learning/blob/main/Training.ipynb): loading the weight and calling the training function
 *  [inference.ipynb](https://github.com/monjurulkarim/active_learning/blob/main/inference.ipynb): this code is used for inferencing. 
