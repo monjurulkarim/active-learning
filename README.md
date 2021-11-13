@@ -25,6 +25,9 @@ This is the implementation code for the paper,<a href="https://arxiv.org/pdf/210
 *  [inference.ipynb](https://github.com/monjurulkarim/active_learning/blob/main/inference.ipynb): this code is used for inferencing. 
 *  [mrcnn/visualize.py](https://github.com/monjurulkarim/active_learning/blob/main/mrcnn/visualize.py) : this code is used for visualizing the segmented bridge elements with mask.
 
+## Dataset
+Download the initial dataset from <a href=""> Here</a> article.</p>
+
 ## Citation
 If you use this repository, please cite the following paper:
 
